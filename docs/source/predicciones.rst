@@ -27,7 +27,7 @@ Visualización de Predicciones
 Comparación de Modelos
 ~~~~~~~~~~~~~~~~~~~~~~
 
-.. figure:: ../../artifacts/cheve_ensemble1.png
+.. figure:: ../../src/cheve_ensemble1.png
    :alt: Comparación de predicciones SARIMAX vs FFNN vs Ensemble
    :align: center
    :width: 90%
@@ -36,7 +36,7 @@ Comparación de Modelos
    Se observa que SARIMAX mantiene una tendencia alcista estable (~$179-180), 
    mientras que FFNN muestra una tendencia bajista progresiva (~$176-166).
 
-.. figure:: ../../artifacts/cheve_ensemble2.png
+.. figure:: ../../src/cheve_ensemble2.png
    :alt: Vista detallada del ensemble
    :align: center
    :width: 90%
@@ -85,14 +85,14 @@ El modelo SARIMAX generó las siguientes predicciones:
      - +$0.49 (+0.27%)
      - ↗️ Alcista
 
-.. figure:: ../../artifacts/ivo_sarimax1.png
+.. figure:: ../../src/ivo_sarimax1.png
    :alt: Predicciones SARIMAX - Vista 1
    :align: center
    :width: 85%
 
    **Figura 3:** Predicciones del modelo SARIMAX mostrando una tendencia alcista suave y estable.
 
-.. figure:: ../../artifacts/ivo_sarimax2.png
+.. figure:: ../../src/ivo_sarimax2.png
    :alt: Predicciones SARIMAX - Vista 2
    :align: center
    :width: 85%
@@ -146,14 +146,14 @@ El modelo de red neuronal generó estas predicciones mediante pronóstico recurs
      - -$1.86 (-1.11%)
      - ↘️ Bajista
 
-.. figure:: ../../artifacts/ivo_fnn1.png
+.. figure:: ../../src/ivo_fnn1.png
    :alt: Predicciones FFNN - Vista 1
    :align: center
    :width: 85%
 
    **Figura 5:** Predicciones del modelo FFNN (red neuronal) mostrando una tendencia bajista progresiva.
 
-.. figure:: ../../artifacts/ivo_fnn2.png
+.. figure:: ../../src/ivo_fnn2.png
    :alt: Predicciones FFNN - Vista 2
    :align: center
    :width: 85%
