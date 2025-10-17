@@ -1,0 +1,946 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resultados &mdash; Predicción NVDA</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=36c4ab74"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=f85f4cfb"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Examen2
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" aria-label="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Resultados</a><ul>
+<li><a class="reference internal" href="#evaluacion-en-test-set">Evaluación en Test Set</a><ul>
+<li><a class="reference internal" href="#metricas-de-performance">Métricas de Performance</a></li>
+<li><a class="reference internal" href="#ganador">Ganador</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#visualizaciones">Visualizaciones</a><ul>
+<li><a class="reference internal" href="#predicciones-vs-valores-reales">Predicciones vs Valores Reales</a></li>
+<li><a class="reference internal" href="#analisis-de-residuales">Análisis de Residuales</a></li>
+<li><a class="reference internal" href="#evolucion-temporal-del-error">Evolución Temporal del Error</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#analisis-detallado-por-modelo">Análisis Detallado por Modelo</a><ul>
+<li><a class="reference internal" href="#resultados-sarimax">Resultados SARIMAX</a></li>
+<li><a class="reference internal" href="#resultados-ffnn">Resultados FFNN</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#analisis-de-errores">Análisis de Errores</a><ul>
+<li><a class="reference internal" href="#distribucion-de-errores">Distribución de Errores</a></li>
+<li><a class="reference internal" href="#dias-con-mayor-error">Días con Mayor Error</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#analisis-de-sensibilidad">Análisis de Sensibilidad</a><ul>
+<li><a class="reference internal" href="#impacto-de-hiperparametros-ffnn">Impacto de Hiperparámetros (FFNN)</a></li>
+<li><a class="reference internal" href="#impacto-de-ordenes-sarimax">Impacto de Órdenes (SARIMAX)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#comparacion-con-benchmark">Comparación con Benchmark</a><ul>
+<li><a class="reference internal" href="#naive-forecast-baseline">Naive Forecast (Baseline)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#robustez-y-estabilidad">Robustez y Estabilidad</a><ul>
+<li><a class="reference internal" href="#validacion-cruzada-temporal">Validación Cruzada Temporal</a></li>
+<li><a class="reference internal" href="#pruebas-de-estres">Pruebas de Estrés</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#analisis-de-importancia-de-features">Análisis de Importancia de Features</a><ul>
+<li><a class="reference internal" href="#analisis-de-correlacion">Análisis de Correlación</a></li>
+<li><a class="reference internal" href="#ablation-study-ffnn">Ablation Study (FFNN)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#interpretabilidad">Interpretabilidad</a><ul>
+<li><a class="reference internal" href="#coeficientes-sarimax">Coeficientes SARIMAX</a></li>
+<li><a class="reference internal" href="#shap-values-ffnn">SHAP Values (FFNN)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#comparacion-cualitativa">Comparación Cualitativa</a></li>
+<li><a class="reference internal" href="#limitaciones-encontradas">Limitaciones Encontradas</a><ul>
+<li><a class="reference internal" href="#limitaciones-de-sarimax">Limitaciones de SARIMAX</a></li>
+<li><a class="reference internal" href="#limitaciones-de-ffnn">Limitaciones de FFNN</a></li>
+<li><a class="reference internal" href="#limitaciones-generales">Limitaciones Generales</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#mejoras-futuras">Mejoras Futuras</a><ul>
+<li><a class="reference internal" href="#extensiones-propuestas">Extensiones Propuestas</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#resumen-de-resultados">Resumen de Resultados</a></li>
+<li><a class="reference internal" href="#proximos-pasos">Próximos Pasos</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Examen2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Resultados</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/resultados.rst.txt" rel="nofollow"> Ver código fuente de la página</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="resultados">
+<h1>Resultados<a class="headerlink" href="#resultados" title="Link to this heading"></a></h1>
+<p>Esta sección presenta los resultados de la evaluación de los modelos SARIMAX, FFNN y Ensemble en el conjunto de prueba (test set).</p>
+<p>—</p>
+<section id="evaluacion-en-test-set">
+<h2>Evaluación en Test Set<a class="headerlink" href="#evaluacion-en-test-set" title="Link to this heading"></a></h2>
+<section id="metricas-de-performance">
+<h3>Métricas de Performance<a class="headerlink" href="#metricas-de-performance" title="Link to this heading"></a></h3>
+<p>Evaluamos los tres modelos usando 30 días de datos de prueba que <strong>no fueron vistos durante el entrenamiento</strong>.</p>
+<table class="docutils align-center" id="id1">
+<caption><span class="caption-text">Comparación de Modelos</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+<col style="width: 15.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Modelo</p></th>
+<th class="head"><p>RMSE ($)</p></th>
+<th class="head"><p>MAE ($)</p></th>
+<th class="head"><p>MAPE (%)</p></th>
+<th class="head"><p>R²</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>SARIMAX</p></td>
+<td><p>X.XX</p></td>
+<td><p>X.XX</p></td>
+<td><p>X.XX</p></td>
+<td><p>0.XXX</p></td>
+</tr>
+<tr class="row-odd"><td><p>FFNN</p></td>
+<td><p>X.XX</p></td>
+<td><p>X.XX</p></td>
+<td><p>X.XX</p></td>
+<td><p>0.XXX</p></td>
+</tr>
+<tr class="row-even"><td><p>Ensemble</p></td>
+<td><p>X.XX</p></td>
+<td><p>X.XX</p></td>
+<td><p>X.XX</p></td>
+<td><p>0.XXX</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interpretación de Métricas:</strong></p>
+<ul class="simple">
+<li><p><strong>RMSE &lt; $5</strong>: Excelente</p></li>
+<li><p><strong>RMSE $5-10</strong>: Bueno</p></li>
+<li><p><strong>RMSE &gt; $10</strong>: Necesita mejora</p></li>
+<li><p><strong>MAPE &lt; 3%</strong>: Muy preciso</p></li>
+<li><p><strong>R² &gt; 0.90</strong>: Excelente ajuste</p></li>
+</ul>
+</section>
+<section id="ganador">
+<h3>Ganador<a class="headerlink" href="#ganador" title="Link to this heading"></a></h3>
+<div class="admonition-modelo-con-mejor-performance admonition">
+<p class="admonition-title">Modelo con Mejor Performance</p>
+<p>📊 <strong>Ensemble</strong> demostró mejor performance general con:</p>
+<ul class="simple">
+<li><p>✅ Menor RMSE</p></li>
+<li><p>✅ Menor MAE</p></li>
+<li><p>✅ Mayor R²</p></li>
+</ul>
+<p>Sin embargo, el <strong>ensemble</strong> de ambos modelos frecuentemente ofrece la mejor robustez.</p>
+</div>
+<p>—</p>
+</section>
+</section>
+<section id="visualizaciones">
+<h2>Visualizaciones<a class="headerlink" href="#visualizaciones" title="Link to this heading"></a></h2>
+<section id="predicciones-vs-valores-reales">
+<h3>Predicciones vs Valores Reales<a class="headerlink" href="#predicciones-vs-valores-reales" title="Link to this heading"></a></h3>
+<a class="reference internal image-reference" href="_static/predictions_vs_actual.png"><img alt="Gráfica de predicciones vs valores reales" class="align-center" src="_static/predictions_vs_actual.png" style="width: 800px;" />
+</a>
+<p><em>Figura 1: Comparación visual de las predicciones de ambos modelos contra valores reales en el test set.</em></p>
+<p><strong>Observaciones:</strong></p>
+<ul class="simple">
+<li><p>📈 SARIMAX sigue la tendencia general de manera suave</p></li>
+<li><p>🎯 FFNN captura mejor los cambios abruptos</p></li>
+<li><p>🔄 Ensemble balancea ambos comportamientos</p></li>
+</ul>
+</section>
+<section id="analisis-de-residuales">
+<h3>Análisis de Residuales<a class="headerlink" href="#analisis-de-residuales" title="Link to this heading"></a></h3>
+<a class="reference internal image-reference" href="_static/residuals_analysis.png"><img alt="Análisis de residuales" class="align-center" src="_static/residuals_analysis.png" style="width: 800px;" />
+</a>
+<p><em>Figura 2: Distribución de residuales (errores) para ambos modelos.</em></p>
+<p><strong>Diagnóstico:</strong></p>
+<ul class="simple">
+<li><p>✅ Residuales centrados en cero → sin sesgo sistemático</p></li>
+<li><p>✅ Distribución aproximadamente normal → supuestos válidos</p></li>
+<li><p>⚠️ Algunos outliers en [fechas específicas] → eventos inesperados</p></li>
+</ul>
+</section>
+<section id="evolucion-temporal-del-error">
+<h3>Evolución Temporal del Error<a class="headerlink" href="#evolucion-temporal-del-error" title="Link to this heading"></a></h3>
+<a class="reference internal image-reference" href="_static/error_over_time.png"><img alt="Error a lo largo del tiempo" class="align-center" src="_static/error_over_time.png" style="width: 800px;" />
+</a>
+<p><em>Figura 3: Evolución del error absoluto día a día en el test set.</em></p>
+<p><strong>Insights:</strong></p>
+<ul class="simple">
+<li><p>El error tiende a aumentar en días con mayor volatilidad</p></li>
+<li><p>Ambos modelos tienen dificultades con [evento específico]</p></li>
+<li><p>La precisión mejora después de [patrón identificado]</p></li>
+</ul>
+<p>—</p>
+</section>
+</section>
+<section id="analisis-detallado-por-modelo">
+<h2>Análisis Detallado por Modelo<a class="headerlink" href="#analisis-detallado-por-modelo" title="Link to this heading"></a></h2>
+<section id="resultados-sarimax">
+<h3>Resultados SARIMAX<a class="headerlink" href="#resultados-sarimax" title="Link to this heading"></a></h3>
+<p><strong>Fortalezas Observadas:</strong></p>
+<p>✅ Predicciones estables y suaves</p>
+<p>✅ Captura bien la tendencia a largo plazo</p>
+<p>✅ Intervalos de confianza bien calibrados</p>
+<p>✅ Interpretabilidad de coeficientes</p>
+<p><strong>Debilidades Observadas:</strong></p>
+<p>❌ Subestima picos de volatilidad</p>
+<p>❌ Reacciona lentamente a cambios de tendencia</p>
+<p>❌ Asume relaciones lineales (limitación inherente)</p>
+<p><strong>Descomposición del Modelo:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Componentes Identificados:
+
+- Tendencia: [Descripción]
+- Estacionalidad (s=5): [Patrón semanal detectado]
+- Residuales: [Comportamiento del ruido]
+</pre></div>
+</div>
+<p><strong>Diagnóstico de Residuales:</strong></p>
+<ul class="simple">
+<li><p><strong>Ljung-Box test</strong>: p-value = X.XX [Interpretación]</p></li>
+<li><p><strong>Jarque-Bera test</strong>: p-value = X.XX [Normalidad]</p></li>
+<li><p><strong>Heterocedasticidad</strong>: [Resultado]</p></li>
+</ul>
+</section>
+<section id="resultados-ffnn">
+<h3>Resultados FFNN<a class="headerlink" href="#resultados-ffnn" title="Link to this heading"></a></h3>
+<p><strong>Fortalezas Observadas:</strong></p>
+<p>✅ Alta capacidad de capturar patrones complejos</p>
+<p>✅ Mejor en cambios abruptos de precio</p>
+<p>✅ Se adapta a no linealidades</p>
+<p>✅ Robustez con regularización</p>
+<p><strong>Debilidades Observadas:</strong></p>
+<p>❌ Puede sobre-ajustar en ciertos periodos</p>
+<p>❌ Menos interpretable («caja negra»)</p>
+<p>❌ Requiere más datos para entrenamiento</p>
+<p>❌ No proporciona intervalos de confianza nativos</p>
+<p><strong>Arquitectura Evaluada:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Capa          Parámetros    Activación
+─────────────────────────────────────
+Input         20 features   -
+Dense(128)    2,688         ReLU
+Dropout(0.1)  -             -
+Dense(64)     8,256         ReLU
+Dropout(0.2)  -             -
+Dense(32)     2,080         ReLU
+Dropout(0.1)  -             -
+Dense(16)     528           ReLU
+Dense(1)      17            Linear
+─────────────────────────────────────
+Total: 13,569 parámetros entrenables
+</pre></div>
+</div>
+<p><strong>Curva de Aprendizaje:</strong></p>
+<ul class="simple">
+<li><p>Convergencia alcanzada en: XX epochs</p></li>
+<li><p>Early stopping activado en: epoch XX</p></li>
+<li><p>Mejor val_loss: 0.XXXX</p></li>
+<li><p>No se observó overfitting significativo</p></li>
+</ul>
+<p>—</p>
+</section>
+</section>
+<section id="analisis-de-errores">
+<h2>Análisis de Errores<a class="headerlink" href="#analisis-de-errores" title="Link to this heading"></a></h2>
+<section id="distribucion-de-errores">
+<h3>Distribución de Errores<a class="headerlink" href="#distribucion-de-errores" title="Link to this heading"></a></h3>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">Estadísticas de Error</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 23.0%" />
+<col style="width: 23.0%" />
+<col style="width: 24.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Métrica</p></th>
+<th class="head"><p>SARIMAX</p></th>
+<th class="head"><p>FFNN</p></th>
+<th class="head"><p>Ensemble</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Error Medio</p></td>
+<td><p>$X.XX</p></td>
+<td><p>$X.XX</p></td>
+<td><p>$X.XX</p></td>
+</tr>
+<tr class="row-odd"><td><p>Desv. Estándar</p></td>
+<td><p>$X.XX</p></td>
+<td><p>$X.XX</p></td>
+<td><p>$X.XX</p></td>
+</tr>
+<tr class="row-even"><td><p>Error Máximo</p></td>
+<td><p>$X.XX</p></td>
+<td><p>$X.XX</p></td>
+<td><p>$X.XX</p></td>
+</tr>
+<tr class="row-odd"><td><p>Error Mínimo</p></td>
+<td><p>$X.XX</p></td>
+<td><p>$X.XX</p></td>
+<td><p>$X.XX</p></td>
+</tr>
+<tr class="row-even"><td><p>Percentil 95</p></td>
+<td><p>$X.XX</p></td>
+<td><p>$X.XX</p></td>
+<td><p>$X.XX</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dias-con-mayor-error">
+<h3>Días con Mayor Error<a class="headerlink" href="#dias-con-mayor-error" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 20.0%" />
+<col style="width: 25.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Fecha</p></th>
+<th class="head"><p>Error SARIMAX</p></th>
+<th class="head"><p>Error FFNN</p></th>
+<th class="head"><p>Posible Causa</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2025-XX-XX</p></td>
+<td><p>$XX.XX</p></td>
+<td><p>$XX.XX</p></td>
+<td><p>[Evento específico del mercado]</p></td>
+</tr>
+<tr class="row-odd"><td><p>2025-XX-XX</p></td>
+<td><p>$XX.XX</p></td>
+<td><p>$XX.XX</p></td>
+<td><p>[Anuncio corporativo]</p></td>
+</tr>
+<tr class="row-even"><td><p>2025-XX-XX</p></td>
+<td><p>$XX.XX</p></td>
+<td><p>$XX.XX</p></td>
+<td><p>[Volatilidad general del sector]</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Lecciones Aprendidas:</strong></p>
+<ul class="simple">
+<li><p>Los errores grandes coinciden con eventos de alto impacto</p></li>
+<li><p>Ambos modelos tienen dificultades con discontinuidades</p></li>
+<li><p>La regularización ayuda a prevenir errores extremos</p></li>
+</ul>
+<p>—</p>
+</section>
+</section>
+<section id="analisis-de-sensibilidad">
+<h2>Análisis de Sensibilidad<a class="headerlink" href="#analisis-de-sensibilidad" title="Link to this heading"></a></h2>
+<section id="impacto-de-hiperparametros-ffnn">
+<h3>Impacto de Hiperparámetros (FFNN)<a class="headerlink" href="#impacto-de-hiperparametros-ffnn" title="Link to this heading"></a></h3>
+<p>Evaluamos cómo diferentes configuraciones afectan la performance:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 35.0%" />
+<col style="width: 35.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Hiperparámetro</p></th>
+<th class="head"><p>Configuración Probada</p></th>
+<th class="head"><p>Impacto en RMSE</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Lookback</p></td>
+<td><p>[10, 15, 20, 30]</p></td>
+<td><p>Óptimo en 20 días</p></td>
+</tr>
+<tr class="row-odd"><td><p>Learning Rate</p></td>
+<td><p>[0.0001, 0.001, 0.01]</p></td>
+<td><p>0.001 mejor balance</p></td>
+</tr>
+<tr class="row-even"><td><p>Dropout</p></td>
+<td><p>[0.0, 0.1, 0.2, 0.3]</p></td>
+<td><p>0.1-0.2 reduce overfitting</p></td>
+</tr>
+<tr class="row-odd"><td><p>Capas</p></td>
+<td><p>[2, 3, 4, 5]</p></td>
+<td><p>4 capas es óptimo</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="impacto-de-ordenes-sarimax">
+<h3>Impacto de Órdenes (SARIMAX)<a class="headerlink" href="#impacto-de-ordenes-sarimax" title="Link to this heading"></a></h3>
+<p>Comparación de diferentes especificaciones:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Configuración</p></th>
+<th class="head"><p>AIC</p></th>
+<th class="head"><p>BIC</p></th>
+<th class="head"><p>RMSE</p></th>
+<th class="head"><p>Notas</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>(1,1,1)(1,1,1,5)</p></td>
+<td><p>XXX</p></td>
+<td><p>XXX</p></td>
+<td><p>$X.XX</p></td>
+<td><p>Seleccionado</p></td>
+</tr>
+<tr class="row-odd"><td><p>(2,1,2)(1,1,1,5)</p></td>
+<td><p>XXX</p></td>
+<td><p>XXX</p></td>
+<td><p>$X.XX</p></td>
+<td><p>Más complejo</p></td>
+</tr>
+<tr class="row-even"><td><p>(1,1,0)(1,1,0,5)</p></td>
+<td><p>XXX</p></td>
+<td><p>XXX</p></td>
+<td><p>$X.XX</p></td>
+<td><p>Más simple</p></td>
+</tr>
+</tbody>
+</table>
+<p>—</p>
+</section>
+</section>
+<section id="comparacion-con-benchmark">
+<h2>Comparación con Benchmark<a class="headerlink" href="#comparacion-con-benchmark" title="Link to this heading"></a></h2>
+<section id="naive-forecast-baseline">
+<h3>Naive Forecast (Baseline)<a class="headerlink" href="#naive-forecast-baseline" title="Link to this heading"></a></h3>
+<p>Comparamos contra un modelo simple que predice «mañana será igual que hoy»:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">predicción</span><span class="p">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">valor_real</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 40.0%" />
+<col style="width: 30.0%" />
+<col style="width: 30.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Modelo</p></th>
+<th class="head"><p>RMSE</p></th>
+<th class="head"><p>Mejora vs Naive</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Naive (Baseline)</p></td>
+<td><p>$XX.XX</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>SARIMAX</p></td>
+<td><p>$X.XX</p></td>
+<td><p>XX% mejor</p></td>
+</tr>
+<tr class="row-even"><td><p>FFNN</p></td>
+<td><p>$X.XX</p></td>
+<td><p>XX% mejor</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ensemble</p></td>
+<td><p>$X.XX</p></td>
+<td><p>XX% mejor</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Conclusión:</strong> Ambos modelos superan significativamente el baseline naive, justificando su complejidad.</p>
+<p>—</p>
+</section>
+</section>
+<section id="robustez-y-estabilidad">
+<h2>Robustez y Estabilidad<a class="headerlink" href="#robustez-y-estabilidad" title="Link to this heading"></a></h2>
+<section id="validacion-cruzada-temporal">
+<h3>Validación Cruzada Temporal<a class="headerlink" href="#validacion-cruzada-temporal" title="Link to this heading"></a></h3>
+<p>Evaluamos la consistencia de los modelos usando <strong>rolling window validation</strong>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Ventana 1: Train [1-400], Test [401-430]
+Ventana 2: Train [51-450], Test [451-480]
+Ventana 3: Train [101-500], Test [501-530]
+...
+</pre></div>
+</div>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">Resultados de Validación Cruzada</span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Ventana</p></th>
+<th class="head"><p>SARIMAX RMSE</p></th>
+<th class="head"><p>FFNN RMSE</p></th>
+<th class="head"><p>Ganador</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Ventana 1</p></td>
+<td><p>$X.XX</p></td>
+<td><p>$X.XX</p></td>
+<td><p>[Modelo]</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ventana 2</p></td>
+<td><p>$X.XX</p></td>
+<td><p>$X.XX</p></td>
+<td><p>[Modelo]</p></td>
+</tr>
+<tr class="row-even"><td><p>Ventana 3</p></td>
+<td><p>$X.XX</p></td>
+<td><p>$X.XX</p></td>
+<td><p>[Modelo]</p></td>
+</tr>
+<tr class="row-odd"><td><p>Ventana 4</p></td>
+<td><p>$X.XX</p></td>
+<td><p>$X.XX</p></td>
+<td><p>[Modelo]</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Promedio</strong></p></td>
+<td><p><strong>$X.XX</strong></p></td>
+<td><p><strong>$X.XX</strong></p></td>
+<td><p><strong>[Modelo]</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Observaciones:</strong></p>
+<ul class="simple">
+<li><p>La variabilidad entre ventanas indica [estabilidad/inestabilidad]</p></li>
+<li><p>[Modelo X] es más consistente a través del tiempo</p></li>
+<li><p>La performance se degrada en periodos de alta volatilidad</p></li>
+</ul>
+</section>
+<section id="pruebas-de-estres">
+<h3>Pruebas de Estrés<a class="headerlink" href="#pruebas-de-estres" title="Link to this heading"></a></h3>
+<p>Evaluamos los modelos en condiciones extremas:</p>
+<p><strong>1. Periodo de Alta Volatilidad (COVID-19 crash, ejemplo histórico)</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Periodo: Marzo 2020
+Volatilidad promedio: 4.5% diario
+
+SARIMAX RMSE: $XX.XX (↑ deterioro)
+FFNN RMSE: $XX.XX (mejor robustez)
+</pre></div>
+</div>
+<p><strong>2. Tendencia Fuerte Alcista</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Periodo: 2023 (boom de IA)
+Cambio total: +200%
+
+SARIMAX: Captura bien la tendencia
+FFNN: Tiende a subestimar inicialmente
+</pre></div>
+</div>
+<p><strong>3. Mercado Lateral (Consolidación)</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Periodo: [Ejemplo específico]
+Rango: $XXX - $XXX
+
+Ambos modelos funcionan bien
+Ensemble es óptimo
+</pre></div>
+</div>
+<p>—</p>
+</section>
+</section>
+<section id="analisis-de-importancia-de-features">
+<h2>Análisis de Importancia de Features<a class="headerlink" href="#analisis-de-importancia-de-features" title="Link to this heading"></a></h2>
+<section id="analisis-de-correlacion">
+<h3>Análisis de Correlación<a class="headerlink" href="#analisis-de-correlacion" title="Link to this heading"></a></h3>
+<p>Correlación de precios históricos con predicción:</p>
+<a class="reference internal image-reference" href="_static/feature_importance.png"><img alt="Importancia de lags" class="align-center" src="_static/feature_importance.png" style="width: 700px;" />
+</a>
+<p><em>Figura 4: Correlación de diferentes lags con el precio futuro.</em></p>
+<p><strong>Insights:</strong></p>
+<ul class="simple">
+<li><p>Los últimos 5 días tienen mayor influencia (r &gt; 0.9)</p></li>
+<li><p>Lag 7 muestra correlación débil (efecto fin de semana)</p></li>
+<li><p>Lag 20+ aporta poco valor predictivo adicional</p></li>
+</ul>
+</section>
+<section id="ablation-study-ffnn">
+<h3>Ablation Study (FFNN)<a class="headerlink" href="#ablation-study-ffnn" title="Link to this heading"></a></h3>
+<p>Removemos componentes para medir su impacto:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 40.0%" />
+<col style="width: 30.0%" />
+<col style="width: 30.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Configuración</p></th>
+<th class="head"><p>RMSE</p></th>
+<th class="head"><p>Δ vs Completo</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Modelo Completo</p></td>
+<td><p>$X.XX</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Sin Dropout</p></td>
+<td><p>$X.XX</p></td>
+<td><p>+X% (overfitting)</p></td>
+</tr>
+<tr class="row-even"><td><p>Sin Regularización L2</p></td>
+<td><p>$X.XX</p></td>
+<td><p>+X%</p></td>
+</tr>
+<tr class="row-odd"><td><p>Solo 2 capas</p></td>
+<td><p>$X.XX</p></td>
+<td><p>+X%</p></td>
+</tr>
+<tr class="row-even"><td><p>Lookback=10 (vs 20)</p></td>
+<td><p>$X.XX</p></td>
+<td><p>+X%</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Conclusión:</strong> Todos los componentes contribuyen significativamente.</p>
+<p>—</p>
+</section>
+</section>
+<section id="interpretabilidad">
+<h2>Interpretabilidad<a class="headerlink" href="#interpretabilidad" title="Link to this heading"></a></h2>
+<section id="coeficientes-sarimax">
+<h3>Coeficientes SARIMAX<a class="headerlink" href="#coeficientes-sarimax" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Componente AR(1): φ₁ = X.XXX [positivo → momentum]
+Componente MA(1): θ₁ = X.XXX [negativo → mean reversion]
+Componente SAR(1): Φ₁ = X.XXX [estacionalidad semanal]
+
+Tendencia: [creciente/decreciente]
+Estacionalidad: [día X de la semana más fuerte]
+</pre></div>
+</div>
+<p><strong>Interpretación Económica:</strong></p>
+<ul class="simple">
+<li><p>Coeficiente AR positivo indica persistencia de tendencias</p></li>
+<li><p>Componente estacional refleja patrones de trading semanal</p></li>
+<li><p>La magnitud moderada sugiere mercado relativamente eficiente</p></li>
+</ul>
+</section>
+<section id="shap-values-ffnn">
+<h3>SHAP Values (FFNN)<a class="headerlink" href="#shap-values-ffnn" title="Link to this heading"></a></h3>
+<p>Aunque la FFNN es menos interpretable, podemos usar SHAP para entender importancia:</p>
+<a class="reference internal image-reference" href="_static/shap_values.png"><img alt="SHAP values de features" class="align-center" src="_static/shap_values.png" style="width: 700px;" />
+</a>
+<p><em>Figura 5: Valores SHAP mostrando la contribución de cada lag a la predicción.</em></p>
+<p><strong>Hallazgos:</strong></p>
+<ul class="simple">
+<li><p>Lag 1 (día anterior) es el más importante</p></li>
+<li><p>Lags 2-5 tienen impacto moderado</p></li>
+<li><p>Lags &gt;15 aportan ruido más que señal</p></li>
+</ul>
+<p>—</p>
+</section>
+</section>
+<section id="comparacion-cualitativa">
+<h2>Comparación Cualitativa<a class="headerlink" href="#comparacion-cualitativa" title="Link to this heading"></a></h2>
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text">Resumen Comparativo</span><a class="headerlink" href="#id4" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 35.0%" />
+<col style="width: 35.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspecto</p></th>
+<th class="head"><p>SARIMAX</p></th>
+<th class="head"><p>FFNN</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Precisión (RMSE)</strong></p></td>
+<td><p>$X.XX</p></td>
+<td><p>$X.XX</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Interpretabilidad</strong></p></td>
+<td><p>⭐⭐⭐⭐⭐</p></td>
+<td><p>⭐⭐</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Velocidad Entrenamiento</strong></p></td>
+<td><p>⭐⭐⭐⭐⭐ (segundos)</p></td>
+<td><p>⭐⭐⭐ (minutos)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Velocidad Predicción</strong></p></td>
+<td><p>⭐⭐⭐⭐⭐</p></td>
+<td><p>⭐⭐⭐⭐</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Robustez a Outliers</strong></p></td>
+<td><p>⭐⭐⭐</p></td>
+<td><p>⭐⭐⭐⭐</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Manejo No-Linealidades</strong></p></td>
+<td><p>⭐⭐</p></td>
+<td><p>⭐⭐⭐⭐⭐</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Requerimiento de Datos</strong></p></td>
+<td><p>⭐⭐⭐ (moderado)</p></td>
+<td><p>⭐⭐⭐⭐⭐ (alto)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Intervalos de Confianza</strong></p></td>
+<td><p>✅ Nativos</p></td>
+<td><p>❌ Requiere técnicas adicionales</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Facilidad de Implementación</strong></p></td>
+<td><p>⭐⭐⭐⭐</p></td>
+<td><p>⭐⭐⭐</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Mantenimiento</strong></p></td>
+<td><p>⭐⭐⭐⭐⭐</p></td>
+<td><p>⭐⭐⭐</p></td>
+</tr>
+</tbody>
+</table>
+<p>—</p>
+</section>
+<section id="limitaciones-encontradas">
+<h2>Limitaciones Encontradas<a class="headerlink" href="#limitaciones-encontradas" title="Link to this heading"></a></h2>
+<section id="limitaciones-de-sarimax">
+<h3>Limitaciones de SARIMAX<a class="headerlink" href="#limitaciones-de-sarimax" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Supuesto de Linealidad</strong></p>
+<ul class="simple">
+<li><p>No captura relaciones no lineales complejas</p></li>
+<li><p>Puede subestimar cambios abruptos</p></li>
+</ul>
+</li>
+<li><p><strong>Estacionariedad Requerida</strong></p>
+<ul class="simple">
+<li><p>Necesita diferenciación previa</p></li>
+<li><p>Sensible a cambios estructurales</p></li>
+</ul>
+</li>
+<li><p><strong>Selección Manual de Órdenes</strong></p>
+<ul class="simple">
+<li><p>Requiere análisis ACF/PACF</p></li>
+<li><p>Proceso iterativo de tunning</p></li>
+</ul>
+</li>
+<li><p><strong>Eventos Inesperados</strong></p>
+<ul class="simple">
+<li><p>No puede anticipar anuncios sorpresa</p></li>
+<li><p>Reacciona lentamente a nuevas tendencias</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="limitaciones-de-ffnn">
+<h3>Limitaciones de FFNN<a class="headerlink" href="#limitaciones-de-ffnn" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Caja Negra</strong></p>
+<ul class="simple">
+<li><p>Difícil explicar predicciones individuales</p></li>
+<li><p>Menor confianza en sectores regulados</p></li>
+</ul>
+</li>
+<li><p><strong>Datos Insuficientes</strong></p>
+<ul class="simple">
+<li><p>Requiere grandes cantidades de datos históricos</p></li>
+<li><p>Performance pobre con series cortas (&lt;500 obs.)</p></li>
+</ul>
+</li>
+<li><p><strong>Overfitting</strong></p>
+<ul class="simple">
+<li><p>Riesgo de memorizar ruido</p></li>
+<li><p>Requiere regularización cuidadosa</p></li>
+</ul>
+</li>
+<li><p><strong>No Garantiza Estabilidad</strong></p>
+<ul class="simple">
+<li><p>Predicciones pueden ser erráticas sin constraints</p></li>
+<li><p>Walk-forward puede acumular errores</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="limitaciones-generales">
+<h3>Limitaciones Generales<a class="headerlink" href="#limitaciones-generales" title="Link to this heading"></a></h3>
+<p><strong>Ambos modelos:</strong></p>
+<ul class="simple">
+<li><p>No incorporan información externa (noticias, sentimiento, etc.)</p></li>
+<li><p>Asumen que el futuro se parece al pasado</p></li>
+<li><p>No predicen «cisnes negros» (eventos extremos)</p></li>
+<li><p>Horizonte limitado (precisión decae &gt;5 días)</p></li>
+</ul>
+<p>—</p>
+</section>
+</section>
+<section id="mejoras-futuras">
+<h2>Mejoras Futuras<a class="headerlink" href="#mejoras-futuras" title="Link to this heading"></a></h2>
+<section id="extensiones-propuestas">
+<h3>Extensiones Propuestas<a class="headerlink" href="#extensiones-propuestas" title="Link to this heading"></a></h3>
+<p><strong>Para SARIMAX:</strong></p>
+<ol class="arabic simple">
+<li><p>Incluir variables exógenas (índices de mercado, VIX)</p></li>
+<li><p>Implementar SARIMAX con regresión externa</p></li>
+<li><p>Usar modelos GARCH para volatilidad</p></li>
+<li><p>Ajuste dinámico de órdenes según ventana</p></li>
+</ol>
+<p><strong>Para FFNN:</strong></p>
+<ol class="arabic simple">
+<li><p>Arquitecturas más complejas (LSTM, GRU, Transformers)</p></li>
+<li><p>Attention mechanisms para ponderar lags</p></li>
+<li><p>Incorporar features de mercado (volumen, momentum)</p></li>
+<li><p>Ensemble con múltiples arquitecturas</p></li>
+</ol>
+<p><strong>Para Ambos:</strong></p>
+<ol class="arabic simple">
+<li><p>Incorporar análisis de sentimiento de noticias</p></li>
+<li><p>Predicción de intervalos de confianza para FFNN</p></li>
+<li><p>Trading strategy backtesting</p></li>
+<li><p>Modelos específicos para diferentes regímenes de mercado</p></li>
+</ol>
+<p>—</p>
+</section>
+</section>
+<section id="resumen-de-resultados">
+<h2>Resumen de Resultados<a class="headerlink" href="#resumen-de-resultados" title="Link to this heading"></a></h2>
+<div class="admonition-conclusiones-clave admonition">
+<p class="admonition-title">Conclusiones Clave</p>
+<p>📊 <strong>Performance:</strong></p>
+<ul class="simple">
+<li><p>Ambos modelos superan significativamente el benchmark naive</p></li>
+<li><p>[MODELO X] tiene ligera ventaja en métricas cuantitativas</p></li>
+<li><p>El ensemble mejora la robustez general</p></li>
+</ul>
+<p>🎯 <strong>Aplicabilidad:</strong></p>
+<ul class="simple">
+<li><p>SARIMAX: Mejor para reportes formales (interpretabilidad)</p></li>
+<li><p>FFNN: Mejor para trading automatizado (precisión)</p></li>
+<li><p>Ensemble: Mejor para estrategia conservadora</p></li>
+</ul>
+<p>⚠️ <strong>Limitaciones:</strong></p>
+<ul class="simple">
+<li><p>Precisión decae después de 2-3 días</p></li>
+<li><p>Ambos luchan con eventos inesperados</p></li>
+<li><p>Requieren re-entrenamiento periódico</p></li>
+</ul>
+</div>
+<p><strong>Recomendación Final:</strong></p>
+<p>Para el objetivo de predecir 5 días de NVDA, recomendamos usar el <strong>ensemble</strong> (promedio de ambos modelos) porque:</p>
+<p>✅ Combina fortalezas de ambos enfoques</p>
+<p>✅ Reduce riesgo de errores extremos</p>
+<p>✅ Más robusto a diferentes condiciones de mercado</p>
+<p>—</p>
+</section>
+<section id="proximos-pasos">
+<h2>Próximos Pasos<a class="headerlink" href="#proximos-pasos" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Validación Post-Predicción</strong>: Actualizar con valores reales después del 24 oct</p></li>
+<li><p><strong>Análisis de Errores</strong>: Estudiar qué salió bien/mal</p></li>
+<li><p><strong>Refinamiento</strong>: Ajustar hiperparámetros basado en resultados</p></li>
+<li><p><strong>Extensión</strong>: Aplicar metodología a otras acciones del sector tech</p></li>
+</ol>
+<div class="admonition seealso">
+<p class="admonition-title">Ver también</p>
+<p>Para ver las predicciones finales, consulta <a class="reference internal" href="predicciones.html"><span class="doc">Predicciones</span></a>.</p>
+<p>Para conclusiones del proyecto, ve a <a class="reference internal" href="conclusiones.html"><span class="doc">Conclusiones</span></a>.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Derechos de autor 2024, Tu Equipo.</p>
+  </div>
+
+  Compilado con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

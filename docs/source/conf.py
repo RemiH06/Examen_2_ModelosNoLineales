@@ -1,7 +1,7 @@
 # Configuration file for the Sphinx documentation builder.
 
 # -- Project information -----------------------------------------------------
-project = 'Predicción de Acciones: SARIMAX vs FFNN'
+project = 'Examen2'
 copyright = '2024, Tu Equipo'
 author = 'Equipo de Predicción'
 release = '1.0.0'
