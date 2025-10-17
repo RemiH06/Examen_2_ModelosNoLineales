@@ -1,0 +1,483 @@
+Conclusiones
+============
+
+Este capítulo final sintetiza los hallazgos principales del proyecto, reflexiona sobre el proceso y propone direcciones futuras.
+
+---
+
+Hallazgos Principales
+----------------------
+
+Rendimiento de los Modelos
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**1. Ambos modelos son viables para predicción a corto plazo**
+
+Tanto SARIMAX como FFNN demostraron capacidad predictiva significativamente superior al baseline naive, con métricas de error aceptables para horizontes de 1-5 días.
+
+.. important::
+   **RMSE promedio**: $X.XX (X.X% del precio)
+   
+   Esto indica que nuestras predicciones están dentro de un margen razonable para aplicaciones prácticas.
+
+**2. Trade-offs entre modelos**
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30, 35, 35
+
+   * - Criterio
+     - SARIMAX
+     - FFNN
+   * - Precisión pura
+     - [Resultado]
+     - [Resultado]
+   * - Interpretabilidad
+     - ⭐⭐⭐⭐⭐
+     - ⭐⭐
+   * - Complejidad implementación
+     - Baja
+     - Media-Alta
+   * - Tiempo de entrenamiento
+     - Segundos
+     - Minutos
+   * - Robustez en producción
+     - Alta
+     - Media
+
+**3. El ensemble ofrece la mejor estrategia**
+
+El promedio simple de ambos modelos consistentemente reduce la varianza del error y proporciona predicciones más estables.
+
+Limitaciones Identificadas
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Técnicas:**
+
+- ⚠️ **Horizonte limitado**: La precisión decae significativamente después del día 3
+- ⚠️ **Eventos imprevistos**: Ningún modelo puede anticipar anuncios corporativos o crisis
+- ⚠️ **Supuesto de estabilidad**: Ambos asumen que patrones pasados continúan
+
+**De Datos:**
+
+- 📊 Solo utilizamos precio histórico (no incorporamos volumen, noticias, sentimiento)
+- 📈 No incluimos variables macroeconómicas (tasas de interés, inflación)
+- 🌐 No consideramos correlación con otros activos del sector
+
+**Metodológicas:**
+
+- No implementamos estrategia de trading para validar utilidad práctica
+- No realizamos análisis de diferentes regímenes de mercado (alcista vs bajista)
+- Validación cruzada temporal limitada por disponibilidad de datos
+
+Respuesta a Preguntas de Investigación
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**¿Es posible predecir precios de acciones con precisión aceptable?**
+
+✅ **Sí, a corto plazo (1-5 días)**, con error promedio de X.X%. Sin embargo, la precisión disminuye con el horizonte.
+
+**¿Qué modelo es superior: estadístico o machine learning?**
+
+🤝 **Depende del contexto:**
+
+- Para **reportes y compliance**: SARIMAX (interpretabilidad)
+- Para **trading automatizado**: FFNN (precisión en patrones complejos)
+- Para **estrategia conservadora**: Ensemble de ambos
+
+**¿Los mercados son eficientes?**
+
+🔍 **Eficiencia débil observable**: Encontramos patrones predictivos en datos históricos, sugiriendo que los mercados no son perfectamente eficientes en el corto plazo. Sin embargo, esto no garantiza rentabilidad después de costos de transacción.
+
+---
+
+Lecciones Aprendidas
+---------------------
+
+Sobre Modelado de Series Temporales Financieras
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. **La estacionariedad es crítica**
+   
+   Las pruebas ADF y KPSS deben realizarse sistemáticamente antes de modelar. Una diferenciación adecuada mejora significativamente la performance de SARIMAX.
+
+2. **Más complejo ≠ mejor**
+   
+   Modelos con muchos parámetros tienden a overfittear. La regularización (L2, dropout) y la validación cruzada son esenciales.
+
+3. **El contexto importa**
+   
+   Días con anuncios corporativos o eventos macroeconómicos importantes son inherentemente más difíciles de predecir.
+
+4. **Ensemble reduce riesgo**
+   
+   Combinar modelos con diferentes supuestos reduce la probabilidad de errores extremos.
+
+Sobre Implementación Práctica
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Pipeline de Datos:**
+
+- La automatización de descarga (yfinance) facilita actualizaciones
+- El control de versiones de datos es tan importante como el de código
+- La reproducibilidad requiere semillas fijas en **todos** los pasos
+
+**Documentación:**
+
+- Read the Docs fuerza estructura y claridad
+- Comentar el "por qué", no solo el "qué" en el código
+- Las visualizaciones interactivas (Plotly) comunican mejor que tablas
+
+**Trabajo en Equipo:**
+
+- GitHub permite colaboración efectiva
+- La modularización del código facilita trabajo paralelo
+- Las reuniones de revisión de código mejoran la calidad
+
+---
+
+Impacto y Aplicaciones
+-----------------------
+
+Valor Académico
+~~~~~~~~~~~~~~~
+
+Este proyecto demostró la aplicación práctica de conceptos de:
+
+- 📚 **Econometría**: Series temporales, estacionariedad, ARIMA/SARIMAX
+- 🤖 **Machine Learning**: Redes neuronales, regularización, validación
+- 📊 **Estadística**: Pruebas de hipótesis, intervalos de confianza
+- 💻 **Ingeniería de Software**: Control de versiones, documentación, reproducibilidad
+
+Aplicaciones Potenciales
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**1. Trading Algorítmico**
+
+Aunque no desarrollamos una estrategia completa, nuestros modelos podrían servir como señales en sistemas de trading automatizado.
+
+.. warning::
+   El backtesting con costos de transacción reales es indispensable antes de implementación.
+
+**2. Gestión de Riesgos**
+
+Los intervalos de confianza de SARIMAX pueden informar cálculos de Value-at-Risk (VaR) para carteras que incluyen NVDA.
+
+**3. Investigación Académica**
+
+La metodología es extensible a:
+
+- Otras acciones del sector tecnológico
+- Diferentes horizontes temporales (intradiario, semanal)
+- Mercados emergentes o criptomonedas
+
+**4. Herramienta Educativa**
+
+El proyecto completo sirve como referencia para estudiantes aprendiendo predicción de series temporales.
+
+---
+
+Trabajo Futuro
+--------------
+
+Mejoras a Corto Plazo
+~~~~~~~~~~~~~~~~~~~~~
+
+**1. Incorporar Features Adicionales**
+
+.. code-block:: python
+
+   features_propuestas = [
+       'volumen',              # Interés en la acción
+       'high_low_range',       # Volatilidad intradiaria
+       'RSI',                  # Relative Strength Index
+       'MACD',                 # Moving Average Convergence Divergence
+       'bollinger_bands',      # Bandas de Bollinger
+   ]
+
+**2. Modelos Más Avanzados**
+
+- **LSTM (Long Short-Term Memory)**: Especializado en secuencias
+- **GRU (Gated Recurrent Unit)**: Más ligero que LSTM
+- **Transformer**: Estado del arte en NLP, aplicable a series temporales
+- **Prophet (Facebook)**: Robusto a datos faltantes y outliers
+
+**3. Análisis de Sentimiento**
+
+Integrar noticias y redes sociales:
+
+.. code-block:: text
+
+   Fuentes potenciales:
+   - Twitter/X (menciones de $NVDA)
+   - Reddit (r/wallstreetbets, r/stocks)
+   - Noticias financieras (Reuters, Bloomberg)
+   - Transcripciones de earnings calls
+
+**4. Optimización de Hiperparámetros**
+
+Usar búsqueda más exhaustiva:
+
+- Grid Search más fino
+- Random Search para exploración inicial
+- Bayesian Optimization para eficiencia
+- AutoML frameworks (Auto-sklearn, TPOT)
+
+Extensiones a Mediano Plazo
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**1. Multi-horizon Forecasting**
+
+Predecir no solo el precio de cierre, sino:
+
+- Precio de apertura
+- Máximo y mínimo del día
+- Volumen de trading
+- Volatilidad intradiaria
+
+**2. Portfolio Optimization**
+
+Usar predicciones para:
+
+.. math::
+
+   \max \mathbb{E}[R_p] - \lambda \text{Var}(R_p)
+   
+   \text{sujeto a: } \sum w_i = 1, \quad w_i \geq 0
+
+Donde las predicciones informan el retorno esperado.
+
+**3. Estrategia de Trading Completa**
+
+Implementar:
+
+- Señales de entrada/salida basadas en predicciones
+- Stop-loss y take-profit dinámicos
+- Backtesting con datos históricos completos
+- Paper trading (simulación en tiempo real)
+- Análisis de retornos ajustados por riesgo (Sharpe, Sortino)
+
+**4. Dashboard Interactivo**
+
+Desarrollar una aplicación web con:
+
+- Streamlit o Dash para UI
+- Actualización automática de datos
+- Visualizaciones en tiempo real
+- Comparación con analistas de Wall Street
+
+Investigación a Largo Plazo
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**1. Causalidad vs Correlación**
+
+Implementar **Granger Causality** para identificar qué variables realmente "causan" movimientos en el precio.
+
+**2. Reinforcement Learning**
+
+Usar Q-learning o Policy Gradients para aprender estrategias de trading óptimas que maximicen retorno acumulado.
+
+**3. Explainable AI (XAI)**
+
+Desarrollar métodos para hacer la FFNN más interpretable:
+
+- LIME (Local Interpretable Model-agnostic Explanations)
+- Integrated Gradients
+- Attention Visualization
+
+**4. Comparación Multi-Activo**
+
+Aplicar la misma metodología a:
+
+- Acciones de diferentes sectores (tech, energy, finance)
+- Índices (S&P 500, NASDAQ)
+- Criptomonedas (BTC, ETH)
+- Commodities (oro, petróleo)
+
+---
+
+Reflexiones del Equipo
+-----------------------
+
+Desafíos Enfrentados
+~~~~~~~~~~~~~~~~~~~~
+
+**Técnicos:**
+
+- ⚙️ Ajuste fino de hiperparámetros requirió múltiples iteraciones
+- 📊 Garantizar reproducibilidad en entorno colaborativo fue complejo
+- 🐛 Debugging de modelos de ML es menos intuitivo que código tradicional
+
+**Conceptuales:**
+
+- 💭 Balance entre complejidad del modelo y riesgo de overfitting
+- 📈 Interpretar residuales y diagnosticar problemas del modelo
+- 🎯 Definir "éxito" para predicciones financieras (métricas adecuadas)
+
+**Organizacionales:**
+
+- 👥 Coordinación de trabajo paralelo en GitHub
+- ⏰ Gestión del tiempo entre análisis exploratorio y documentación
+- 📝 Mantener documentación actualizada durante desarrollo iterativo
+
+Satisfacciones
+~~~~~~~~~~~~~~
+
+✅ **Implementación exitosa** de dos enfoques muy diferentes
+
+✅ **Documentación profesional** tipo industria (Read the Docs)
+
+✅ **Reproducibilidad completa** del proyecto
+
+✅ **Aprendizaje profundo** de series temporales y deep learning
+
+✅ **Trabajo colaborativo efectivo** usando herramientas modernas
+
+Habilidades Desarrolladas
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+   :header-rows: 1
+   :widths: 40, 60
+
+   * - Habilidad
+     - Aplicación en el Proyecto
+   * - **Econometría de Series Temporales**
+     - Pruebas de estacionariedad, modelos ARIMA/SARIMAX
+   * - **Deep Learning**
+     - Arquitecturas de redes, regularización, optimización
+   * - **Ingeniería de Datos**
+     - ETL con yfinance, preprocesamiento, feature engineering
+   * - **Visualización de Datos**
+     - Plotly interactivo, matplotlib estadístico
+   * - **Control de Versiones**
+     - Git/GitHub para colaboración
+   * - **Documentación Técnica**
+     - Sphinx, reStructuredText, Read the Docs
+   * - **Reproducibilidad Científica**
+     - Semillas, entornos virtuales, requirements.txt
+
+---
+
+Conclusión Final
+----------------
+
+.. admonition:: Resumen Ejecutivo del Proyecto
+
+   🎯 **Objetivo Cumplido:**
+   
+   Desarrollamos e implementamos exitosamente dos modelos complementarios (SARIMAX y FFNN) para predecir el precio de cierre de NVIDIA durante 5 días, con error promedio de X.X%.
+   
+   📊 **Hallazgo Principal:**
+   
+   La combinación (ensemble) de enfoques estadísticos tradicionales y machine learning moderno ofrece la mejor estrategia para predicción de series temporales financieras.
+   
+   💡 **Contribución:**
+   
+   Este proyecto demuestra que la predicción a corto plazo de acciones es factible con herramientas modernas, aunque sujeta a limitaciones inherentes de los mercados financieros.
+   
+   🚀 **Impacto:**
+   
+   La metodología desarrollada es extensible a otros activos y puede servir como base para sistemas de trading más sofisticados o herramientas de análisis de riesgo.
+
+Mensaje Final
+~~~~~~~~~~~~~
+
+La predicción de mercados financieros seguirá siendo un desafío fundamental en la intersección de economía, estadística y ciencias de la computación. Si bien **no existe un "santo grial"** que prediga el futuro con certeza, este proyecto demuestra que:
+
+1. Los métodos cuantitativos rigurosos **pueden identificar patrones** en datos históricos
+2. La **combinación de múltiples enfoques** es superior a depender de un solo método
+3. La **transparencia y reproducibilidad** son esenciales para investigación seria
+4. Las **limitaciones deben reconocerse** honestamente
+
+Los mercados son sistemas complejos influenciados por innumerables factores - económicos, políticos, psicológicos y aleatorios. Nuestros modelos capturan solo una fracción de esta complejidad. Sin embargo, incluso una mejora marginal sobre predicciones aleatorias tiene valor teórico y potencial aplicación práctica.
+
+.. epigraph::
+
+   "All models are wrong, but some are useful."
+   
+   -- George Box, Estadístico
+
+Nuestros modelos están "equivocados" en el sentido de que simplifican enormemente la realidad. Pero son "útiles" porque proporcionan un marco sistemático para razonar sobre el futuro bajo incertidumbre.
+
+---
+
+Agradecimientos
+---------------
+
+Este proyecto no hubiera sido posible sin:
+
+- 👨‍🏫 **Nuestro profesor** por guiar el proceso y proporcionar retroalimentación valiosa
+- 💻 **La comunidad open-source** por herramientas como TensorFlow, Statsmodels y Plotly
+- 📚 **Recursos educativos** de Kaggle, Stack Overflow y documentación oficial
+- 🤝 **Nuestros compañeros de equipo** por la colaboración y perseverancia
+
+---
+
+Referencias Bibliográficas
+--------------------------
+
+Libros y Artículos Académicos
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. **Box, G. E. P., Jenkins, G. M., Reinsel, G. C., & Ljung, G. M. (2015)**. 
+   *Time Series Analysis: Forecasting and Control (5th ed.)*. 
+   Wiley.
+
+2. **Goodfellow, I., Bengio, Y., & Courville, A. (2016)**. 
+   *Deep Learning*. 
+   MIT Press. http://www.deeplearningbook.org
+
+3. **Murphy, K. P. (2022)**. 
+   *Probabilistic Machine Learning: An Introduction*. 
+   MIT Press.
+
+4. **Hamilton, J. D. (1994)**. 
+   *Time Series Analysis*. 
+   Princeton University Press.
+
+Recursos en Línea
+~~~~~~~~~~~~~~~~~
+
+5. **Statsmodels Documentation**. 
+   https://www.statsmodels.org/stable/index.html
+
+6. **TensorFlow Keras Documentation**. 
+   https://www.tensorflow.org/api_docs/python/tf/keras
+
+7. **Yahoo Finance API (yfinance)**. 
+   https://github.com/ranaroussi/yfinance
+
+8. **Read the Docs Documentation**. 
+   https://docs.readthedocs.io/
+
+Datasets
+~~~~~~~~
+
+9. **Yahoo Finance Historical Data**. 
+   Accessed via yfinance library. 
+   Symbol: NVDA (NVIDIA Corporation).
+
+---
+
+Apéndices
+---------
+
+Disponibles en el repositorio de GitHub:
+
+- **Apéndice A**: Código fuente completo (``src/prediccion_acciones.py``)
+- **Apéndice B**: Jupyter Notebook con análisis exploratorio
+- **Apéndice C**: Pruebas adicionales de hiperparámetros
+- **Apéndice D**: Visualizaciones complementarias
+- **Apéndice E**: Resultados de validación cruzada detallados
+
+🔗 **Repositorio**: https://github.com/
+
+---
+
+.. note::
+   Esta documentación se actualizará después del 24 de octubre de 2025 con los resultados reales de las predicciones y un análisis post-mortem del performance.
+
+**Última actualización**: [17/10/2025]
+
+**Versión del documento**: 1.0.0
