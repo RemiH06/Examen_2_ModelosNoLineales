@@ -87,8 +87,10 @@ Para ver el análisis completo de las predicciones, consulta :doc:`predicciones`
 Navegación Rápida
 =================
 
-* :ref:`genindex`
-* :ref:`search`
+* :ref:`metodologia`
+* :ref:`predicciones`
+* :ref:`resultados`
+* :ref:`conclusiones`
 
 Contacto
 --------
