@@ -12,7 +12,8 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
-    'myst_parser',
+    # Si no vas a usar Markdown, puedes eliminar la siguiente línea
+    # 'myst_parser',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -25,7 +26,8 @@ exclude_patterns = []
 # The suffix(es) of source filenames.
 source_suffix = {
     '.rst': 'restructuredtext',
-    '.md': 'markdown',
+    # Si no vas a usar Markdown, elimina la siguiente línea:
+    # '.md': 'markdown',
 }
 
 # The master toctree document.
