@@ -41,6 +41,55 @@ Este proyecto implementa y compara dos enfoques distintos para la predicción de
     - Ensemble promediando ambos modelos para mayor robustez
     - Validación con datos reales del mercado
 
+**Menú**
+.. toctree::
+   :maxdepth: 2
+   :caption: 📚 Contenido del Proyecto:
+
+   portada
+   motivacion
+   metodologia
+   predicciones
+   resultados
+   conclusiones
+
+Resumen Rápido
+==============
+
+**Acción analizada:** NVIDIA (NVDA) - NASDAQ
+
+**Modelos implementados:**
+
+- 📊 **SARIMAX** (1,1,1)(1,1,1,5) - Modelo estadístico con estacionalidad semanal
+- 🤖 **FFNN** (MLP) - Red neuronal con 20 lags de entrada
+
+**Período de predicción:** 16-17 y 20-22 de octubre de 2025 (5 días hábiles)
+
+**Datos:** Históricos desde 2010 hasta 15 de octubre de 2025
+
+**Reproducibilidad:** Semilla fija SEED=42
+
+Predicciones Destacadas
+========================
+
+.. csv-table:: 
+   :header: "Fecha", "SARIMAX", "FFNN", "Ensemble"
+   :widths: 25, 25, 25, 25
+
+   "2025-10-16", "$179.47", "$175.90", "$177.68"
+   "2025-10-17", "$179.61", "$173.70", "$176.65"
+   "2025-10-20", "$179.57", "$170.54", "$175.05"
+   "2025-10-21", "$179.79", "$167.79", "$173.79"
+   "2025-10-22", "$180.28", "$165.93", "$173.10"
+
+Para ver el análisis completo de las predicciones, consulta :doc:`predicciones`.
+
+Navegación Rápida
+=================
+
+* :ref:`genindex`
+* :ref:`search`
+
 Contacto
 --------
 

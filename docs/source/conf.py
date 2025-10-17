@@ -2,8 +2,8 @@
 
 # -- Project information -----------------------------------------------------
 project = 'Examen2'
-copyright = '2024, Tu Equipo'
-author = 'Equipo de Predicción'
+copyright = '2024, Ivopato, Hex, Cheve17'
+author = 'Ivopato, Hex, Cheve17'
 release = '1.0.0'
 
 # -- General configuration ---------------------------------------------------
