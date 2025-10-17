@@ -9,10 +9,10 @@ sphinx:
   configuration: docs/source/conf.py
   fail_on_warning: false
 
-python:
-  install:
-    - requirements: requirements.txt
-
 formats:
   - pdf
   - epub
+
+python:
+  install:
+    - requirements: requirements.txt
